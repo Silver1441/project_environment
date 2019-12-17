@@ -1,7 +1,23 @@
+version: '2.1'
+
 services:
+  redis1:
+    image: redis:5.0.7
+    hostname: redis1
+    expose:
+      - 6379
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ./volumes/redis1/data:/data
+      
   zoo1:
     image: zookeeper:3.4.9
     hostname: zoo1
+    expose:
+      - 2181
+    ports:
     ports:
       - "2181:2181"
     environment:
@@ -15,6 +31,8 @@ services:
   kafka1:
     image: confluentinc/cp-kafka:5.1.2
     hostname: kafka1
+    expose:
+      - 9092
     ports:
       - "9092:9092"
     environment:
@@ -29,3 +47,4 @@ services:
       - ./volumes/kafka1/data:/var/lib/kafka/data
     depends_on:
       - zoo1
+      - redis1
